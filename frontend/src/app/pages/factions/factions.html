@@ -1,1 +1,6 @@
-<p>factions works!</p>
+<h2>Factions</h2>
+<ul>
+  @for (f of rows; track f.code) {
+    <li><strong>{{ f.displayName }}</strong> <small>({{ f.code }})</small></li>
+  }
+</ul>

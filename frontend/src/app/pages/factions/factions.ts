@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { ApiService, Faction } from '../../services/api.service';
 
 @Component({
   selector: 'app-factions',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
   templateUrl: './factions.html',
   styleUrl: './factions.scss'
 })
-export class Factions {}
+export class Factions implements OnInit {
+  private api = inject(ApiService);
+  rows: Faction[] = [];
+  ngOnInit() { this.api.getPublicFactions().subscribe(r => this.rows = r); }
+}

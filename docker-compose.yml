@@ -6,9 +6,9 @@ services:
     container_name: wotr-atlas
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydb
+      POSTGRES_USER: wotr
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: wotrdb
     ports:
       - "5432:5432"
     volumes:
