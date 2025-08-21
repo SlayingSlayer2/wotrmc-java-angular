@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wotr_atlas
+    username: wotr
+    password: wotr
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    issuer: wotr-atlas
+    secret: dev-only-super-secret-change-me   # any random string for dev
+    ttl-seconds: 36000
