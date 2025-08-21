@@ -18,5 +18,5 @@ server:
 app:
   jwt:
     issuer: wotr-atlas
-    secret: dev-only-super-secret-change-me   # any random string for dev
+    secret: "this-should-be-at-least-32-bytes-long-change-me-1234"
     ttl-seconds: 36000
