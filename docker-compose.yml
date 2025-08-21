@@ -1,18 +1,44 @@
 version: "3.9"
-
 services:
   db:
     image: postgres:16
-    container_name: wotr-atlas
-    restart: always
     environment:
-      POSTGRES_USER: wotr
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: wotrdb
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    networks: [wotr-net]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
 
-volumes:
-  pgdata:
+  backend:
+    build: ./backend
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+    expose: ["8080"]
+    networks: [wotr-net]
+
+  frontend:
+    build: ./frontend
+    expose: ["80"]
+    depends_on: [backend]
+    networks: [wotr-net]
+
+  caddy:
+    image: caddy:2
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [frontend, backend]
+    networks: [wotr-net]
+
+volumes: { pgdata: {}, caddy_data: {}, caddy_config: {} }
+networks: { wotr-net: {} }
