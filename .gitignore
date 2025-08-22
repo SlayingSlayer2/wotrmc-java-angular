@@ -1,1 +1,36 @@
-/frontend/.vscode
+# VS Code (repo-wide or keep your /frontend rule if you prefer)
+.vscode/
+frontend/.vscode/
+
+# Environment files (keep only examples in git)
+*.env
+!.env.example
+!*.*.env.example
+
+# JetBrains: ignore everything except shared run configs
+.idea/*
+!.idea/runConfigurations
+!.idea/runConfigurations/**
+
+# Node/Angular
+frontend/node_modules/
+frontend/dist/
+
+# Java/Maven
+backend/target/
+
+# Logs & OS cruft
+*.log
+.DS_Store
+Thumbs.db
+
+# Angular CLI cache
+frontend/.angular/
+
+# NPM/Yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IntelliJ shelves (temp changes)
+.idea/shelf/

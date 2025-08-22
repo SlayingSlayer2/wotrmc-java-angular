@@ -1,44 +1,65 @@
-version: "3.9"
 services:
   db:
     image: postgres:16
+    container_name: wotr-db
+    restart: always
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
-      POSTGRES_DB: ${DB_NAME}
-    volumes: [pgdata:/var/lib/postgresql/data]
-    networks: [wotr-net]
-    healthcheck:
-      test: ["CMD-SHELL","pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 10s
-      timeout: 5s
-      retries: 6
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - wotr-net
 
   backend:
     build: ./backend
+    container_name: wotr-backend
+    restart: always
     depends_on:
-      db: { condition: service_healthy }
+      - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
-    expose: ["8080"]
-    networks: [wotr-net]
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      - wotr-net
 
   frontend:
     build: ./frontend
-    expose: ["80"]
-    depends_on: [backend]
-    networks: [wotr-net]
+    container_name: wotr-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - wotr-net
 
   caddy:
     image: caddy:2
+    container_name: wotr-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
-    depends_on: [frontend, backend]
-    networks: [wotr-net]
+    depends_on:
+      - frontend
+    networks:
+      - wotr-net
 
-volumes: { pgdata: {}, caddy_data: {}, caddy_config: {} }
-networks: { wotr-net: {} }
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:
+
+networks:
+  wotr-net:

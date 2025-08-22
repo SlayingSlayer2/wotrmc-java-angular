@@ -1,0 +1,12 @@
+{$SITE} {
+  encode gzip
+
+  @api path /api/* /actuator/*
+  handle @api {
+    reverse_proxy {$BACKEND_UPSTREAM}
+  }
+
+  handle {
+    reverse_proxy {$FRONTEND_UPSTREAM}
+  }
+}

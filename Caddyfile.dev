@@ -1,0 +1,18 @@
+{$SITE} {
+  encode gzip
+
+  @api path /api/* /actuator/*
+  handle @api {
+    reverse_proxy {$BACKEND_UPSTREAM}
+  }
+
+  # Frontend via Angular dev server on the host
+  handle {
+    reverse_proxy {
+      to {$FRONTEND_UPSTREAM}
+      header_up Host localhost:4200           
+      header_up X-Forwarded-Host localhost:4200
+      header_up X-Forwarded-Proto http
+    }
+  }
+}

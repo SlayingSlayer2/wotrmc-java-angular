@@ -48,9 +48,11 @@ CREATE TABLE IF NOT EXISTS faction_realms (
 
 -- Player accounts (minimal fields used by seeds)
 CREATE TABLE IF NOT EXISTS app_user (
-  id            SERIAL PRIMARY KEY,
+  id            BIGSERIAL PRIMARY KEY,     -- matches Long + IDENTITY
   email         TEXT UNIQUE NOT NULL,
-  display_name  TEXT
+  display_name  TEXT NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role          TEXT NOT NULL
 );
 
 -- User ↔ Faction mapping with role label

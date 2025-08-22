@@ -1,25 +1,25 @@
-version: "3.9"
-
 services:
+  caddy:
+    environment:
+      SITE: ${SITE:-:80}
+      BACKEND_UPSTREAM: ${BACKEND_UPSTREAM:-host.docker.internal:8080}
+      FRONTEND_UPSTREAM: ${FRONTEND_UPSTREAM:-host.docker.internal:4200}
+      ACME_EMAIL: ${ACME_EMAIL:-dev@example.com}
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: []
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    ports: []
+
+  backend:
+    ports: []
+    environment: {}
+
   db:
     ports:
       - "5432:5432"
-
-  backend:
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/wotrdb
-      SPRING_DATASOURCE_USERNAME: wotr
-      SPRING_DATASOURCE_PASSWORD: admin
-    volumes:
-       - ./backend:/app
-
-  frontend:
-    ports:
-      - "3000:80"
-     volumes:
-       - ./frontend:/usr/share/nginx/html
-
-  caddy:
-    profiles: ["caddy-disabled"]

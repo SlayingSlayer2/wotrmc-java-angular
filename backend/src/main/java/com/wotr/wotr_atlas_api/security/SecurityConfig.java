@@ -6,6 +6,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,6 +30,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
+@Profile("!dev")  // only applies when you run with 'dev'
 public class SecurityConfig {
 
     @Bean
@@ -44,11 +46,6 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
         return http.build();
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     // === YOUR TWO BEANS GO HERE ===
