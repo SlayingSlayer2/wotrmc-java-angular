@@ -1,15 +1,39 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ApiService, Faction } from '../../services/api.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { FactionsService } from '../../services/factions.service';
+import { Faction } from '../../model/faction.model';
+
+// PrimeNG
+import { TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
+import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-factions',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule, FormsModule,
+    TableModule, InputTextModule, TagModule, ButtonModule, TooltipModule, ProgressSpinnerModule
+  ],
   templateUrl: './factions.html',
-  styleUrl: './factions.scss'
+  styleUrls: ['./factions.scss']
 })
 export class Factions implements OnInit {
-  private api = inject(ApiService);
+  private api = inject(FactionsService);
+
   rows: Faction[] = [];
-  ngOnInit() { this.api.getPublicFactions().subscribe(r => this.rows = r); }
+  loading = true;
+  globalFilter = '';
+
+  ngOnInit(): void {
+    this.api.getAllFactions().subscribe({
+      next: data => { this.rows = data ?? []; this.loading = false; },
+      error: _ => { this.rows = []; this.loading = false; }
+    });
+  }
 }

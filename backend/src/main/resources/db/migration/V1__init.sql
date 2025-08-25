@@ -104,9 +104,3 @@ CREATE TABLE IF NOT EXISTS fiefdoms (
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- =====================
--- One example row (kept intentionally distinct from V2 seeds)
--- =====================
-INSERT INTO factions(code, display_name, banner, capital_waypoint, lord_name)
-VALUES ('DEMO', 'Demo Faction', 'demo', 'DEMO_CAPITAL', 'Demo Lord')
-ON CONFLICT (code) DO NOTHING;
