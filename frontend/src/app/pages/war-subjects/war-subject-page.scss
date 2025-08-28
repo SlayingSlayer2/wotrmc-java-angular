@@ -1,0 +1,15 @@
+.subject-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.title { margin: 0; }
+.desc { margin: 0; opacity: .85; }
+.banner { max-height: 160px; border-radius: 12px; }
+.click-row { cursor: pointer; }
+@media (max-width: 768px) {
+  .subject-header { grid-template-columns: 1fr; }
+  .banner { max-width: 100%; }
+}

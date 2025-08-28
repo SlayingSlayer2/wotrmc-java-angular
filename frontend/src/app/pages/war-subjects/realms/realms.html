@@ -1,0 +1,65 @@
+<app-table
+  [value]="rows"
+  [loading]="loading"
+  dataKey="code"
+  title="Factions"
+  [globalFilterFields]="['display_name','code','banner', 'capital_waypoint']"
+  [rows]="10"
+  [rowsPerPageOptions]="[10,25,50]">
+
+  <!-- HEADER (note the leading blank <th/> for the toggler column) -->
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width:3rem"></th>
+      <th pSortableColumn="display_name">Name <p-sortIcon field="display_name" /></th>
+<!--      <th pSortableColumn="code">Code <p-sortIcon field="code" /></th>-->
+      <th pSortableColumn="banner">Banner <p-sortIcon field="banner" /></th>
+      <th pSortableColumn="capital_waypoint">Capital <p-sortIcon field="capital_waypoint" /></th>
+    </tr>
+  </ng-template>
+
+  <!-- BODY (first cell is the toggler button) -->
+  <ng-template pTemplate="body" let-f let-rowIndex="rowIndex">
+    <tr>
+<!--      <td>-->
+<!--        <button-->
+<!--          pButton pRipple type="button"-->
+<!--          [icon]="f.__expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"-->
+<!--          [pRowToggler]="f"-->
+<!--          class="p-button-text p-button-sm">-->
+<!--        </button>-->
+<!--      </td>-->
+      <td><span class="font-medium">{{ f.displayName }}</span></td>
+      <td><span class="pi pi-hashtag mr-1" pTooltip="Code"></span>{{ f.code }}</td>
+      <td>
+        <p-tag *ngIf="f.banner; else noBanner" [value]="f.banner!" severity="info"></p-tag>
+        <ng-template #noBanner><span class="text-500">—</span></ng-template>
+      </td>
+      <td>{{ f.capitalWaypoint || '—' }}</td>
+    </tr>
+  </ng-template>
+
+  <!-- EXPANSION CONTENT -->
+  <ng-template pTemplate="rowexpansion" let-f>
+    <tr>
+      <td colspan="6">
+        <div class="p-3">
+          <strong>{{ f.displayName }}</strong> details go here…
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+
+  <!-- (Optional) Empty + Loading -->
+  <ng-template pTemplate="emptymessage">
+    <tr><td colspan="6">No factions found.</td></tr>
+  </ng-template>
+
+  <ng-template pTemplate="loadingbody">
+    <tr>
+      <td colspan="6" class="center">
+        <p-progressSpinner class="w-2rem h-2rem"></p-progressSpinner>
+      </td>
+    </tr>
+  </ng-template>
+</app-table>

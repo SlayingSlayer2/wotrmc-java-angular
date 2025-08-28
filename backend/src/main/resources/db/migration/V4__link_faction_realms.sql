@@ -6,6 +6,7 @@ VALUES
   ('AR_ADUNAIM', 'ArAdunaimMan'),
   ('AVARI', 'AvariElf'),
   ('AVARI', 'CuivienenElf'),
+  ('BLACKLOCKS', 'WickedDwarf'),
   ('BLUE_MOUNTAINS', 'BlueDwarf'),
   ('BLUE_MOUNTAINS', 'BroadbeamsDwarf'),
   ('BREE', 'BreeHobbit'),
@@ -124,7 +125,6 @@ VALUES
   ('UDDARI', 'UddariMan'),
   ('VARILLESRA', 'VarillesraDwarf'),
   ('VSEGO', 'VsegoMan'),
-  ('WICKED_DWARVES', 'WickedDwarf'),
   ('WOOD_ELF', 'GreenwoodElf'),
   ('WOOD_ELF', 'WoodlandRealmElf')
 ON CONFLICT DO NOTHING;

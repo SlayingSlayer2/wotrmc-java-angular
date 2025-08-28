@@ -1,0 +1,84 @@
+<div class="card">
+  <div class="toolbar" *ngIf="title || showGlobalSearch || showExport">
+    <h2 class="m-0" *ngIf="title">{{ title }}</h2>
+
+    <span class="p-input-icon-left ml-auto" *ngIf="showGlobalSearch">
+      <i class="pi pi-search"></i>
+      <input
+        pInputText
+        type="text"
+        placeholder="Search..."
+        [(ngModel)]="globalFilter"
+        (input)="table.filterGlobal(globalFilter, 'contains')"
+      />
+    </span>
+
+    <button
+      *ngIf="showExport"
+      pButton
+      type="button"
+      icon="pi pi-download"
+      label="CSV"
+      class="p-button-sm"
+      (click)="table.exportCSV({ selectionOnly: false })"
+    ></button>
+  </div>
+
+  <p-table
+    #table
+    [value]="value"
+    [paginator]="true"
+    [rows]="rows"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [globalFilterFields]="globalFilterFields"
+    [loading]="loading"
+    [dataKey]="dataKey"
+    [exportFilename]="exportFileName || title || 'export'"
+    responsiveLayout="scroll"
+  >
+    <!-- HEADER -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{ col.header }}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+
+    <!-- BODY -->
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td *ngFor="let col of columns">
+          <ng-container *ngIf="entityType && col.field === linkField; else plainCell">
+            <a
+              *ngIf="toDetailLink(row) as link"
+              [routerLink]="link"
+            >
+              {{ row[col.field] }}
+            </a>
+            <span *ngIf="!toDetailLink(row)">{{ row[col.field] }}</span>
+          </ng-container>
+          <ng-template #plainCell>
+            {{ row[col.field] }}
+          </ng-template>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- EMPTY + LOADING -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td [attr.colspan]="columns.length">No data found.</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="loadingbody">
+      <tr>
+        <td [attr.colspan]="columns.length" class="center">
+          <p-progressSpinner styleClass="w-2rem h-2rem"></p-progressSpinner>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
